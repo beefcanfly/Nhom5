@@ -56,7 +56,7 @@ public class AdminUI extends JFrame {
 
         add(sidebar, BorderLayout.WEST);
 
-        // ===== MAIN =====
+        // ===== MAIN1 =====
         JPanel main = new JPanel(new BorderLayout());
         main.setBackground(Color.WHITE);
 
