@@ -18,7 +18,7 @@ public class LecturerUI extends JFrame {
         header.setBackground(new Color(0, 153, 204));
         header.setPreferredSize(new Dimension(0, 60));
 
-        JLabel title = new JLabel("  Lecturer Dashboard");
+        JLabel title = new JLabel("  UIS CDN Mien Nam");
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -39,9 +39,12 @@ public class LecturerUI extends JFrame {
 
         String[] menu = {
                 "Trang chủ",
-                "Danh sách lớp",
+                "Thông báo",
+                "Khóa học",
+                "Thời khóa biểu",
+                "Lịch sử dạy học",
+                "Báo cáo đánh giá",
                 "Nhập điểm",
-                "Quản lý sinh viên",
                 "Thống kê"
         };
 
@@ -83,13 +86,13 @@ public class LecturerUI extends JFrame {
         col1.setLayout(new BoxLayout(col1, BoxLayout.Y_AXIS));
         col1.add(new JLabel("Mã GV: GV001"));
         col1.add(new JLabel("Tên: Nguyễn Văn A"));
-        col1.add(new JLabel("Khoa: Viễn thông"));
-        col1.add(new JLabel("Chuyên môn: Mạng máy tính"));
+        col1.add(new JLabel("Khoa: Điện"));
+        col1.add(new JLabel("Chuyên môn: Điện tử số"));
 
         JPanel col2 = new JPanel();
         col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
         col2.add(new JLabel("SĐT: 0909123456"));
-        col2.add(new JLabel("Email: nguyenvana@ptit.edu.vn"));
+        col2.add(new JLabel("Email: nguyenvana@cdnmn.edu.vn"));
         col2.add(new JLabel("Học vị: Thạc sĩ"));
 
         infoPanel.add(col1);

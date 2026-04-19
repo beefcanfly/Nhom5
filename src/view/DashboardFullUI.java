@@ -9,7 +9,7 @@ public class DashboardFullUI extends JFrame {
     private JPanel mainContent;
 
     public DashboardFullUI() {
-        setTitle("UIS Dashboard");
+        setTitle("Giao diện Login");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -41,8 +41,8 @@ public class DashboardFullUI extends JFrame {
 //        JButton btnHocPhi = new JButton("Học phí");
 //        btnHocPhi.setMaximumSize(new Dimension(180, 35));
 
-        JButton btnThongBao = new JButton("Thông báo");
-        btnThongBao.setMaximumSize(new Dimension(180, 35));
+//        JButton btnThongBao = new JButton("Thông báo");
+//        btnThongBao.setMaximumSize(new Dimension(180, 35));
 
         // ===== ADD COMPONENT =====
         leftPanel.add(lblUser);
@@ -63,8 +63,8 @@ public class DashboardFullUI extends JFrame {
         leftPanel.add(btnHome);
         leftPanel.add(Box.createVerticalStrut(10));
 //        leftPanel.add(btnHocPhi);
-        leftPanel.add(Box.createVerticalStrut(10));
-        leftPanel.add(btnThongBao);
+//        leftPanel.add(Box.createVerticalStrut(10));
+//        leftPanel.add(btnThongBao);
 
         // đẩy layout đẹp hơn
         leftPanel.add(Box.createVerticalGlue());
@@ -99,14 +99,14 @@ public class DashboardFullUI extends JFrame {
 
         btnHome.addActionListener(e -> cardLayout.show(mainContent, "HOME"));
 //        btnHocPhi.addActionListener(e -> cardLayout.show(mainContent, "HOCPHI"));
-        btnThongBao.addActionListener(e -> cardLayout.show(mainContent, "THONGBAO"));
+//        btnThongBao.addActionListener(e -> cardLayout.show(mainContent, "THONGBAO"));
     }
 
     // ===== HOME =====
     private JPanel createHomePanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JLabel header = new JLabel("Dashboard");
+        JLabel header = new JLabel("UIS Cao Dang Nghe Mien Nam");
         header.setFont(new Font("Arial", Font.BOLD, 24));
         header.setBorder(new EmptyBorder(10, 10, 10, 10));
 
