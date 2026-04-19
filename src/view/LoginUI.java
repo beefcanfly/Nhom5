@@ -7,7 +7,7 @@ import java.awt.*;
 public class LoginUI extends JFrame {
 
     public LoginUI() {
-        setTitle("UIS Dashboard");
+        setTitle("Sinh viên Dashboard");
         setSize(1200, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -18,7 +18,7 @@ public class LoginUI extends JFrame {
         header.setBackground(new Color(0, 153, 204));
         header.setPreferredSize(new Dimension(0, 60));
 
-        JLabel title = new JLabel("  UIS Dashboard");
+        JLabel title = new JLabel("  UIS CDN Mien Nam");
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -41,9 +41,11 @@ public class LoginUI extends JFrame {
                 "Trang chủ",
                 "Thông báo",
                 "Xem chương trình đào tạo",
-                "Đăng ký môn học",
+                "Đăng ký môn học",           
                 "Xem học phí",
-                "Xem điểm"
+                "Thời khóa biểu",
+                "Xem điểm",
+                "Xem lịch thi"
         };
 
         for (String m : menu) {
@@ -90,18 +92,18 @@ public class LoginUI extends JFrame {
 
         col1.add(avatar);
         col1.add(Box.createVerticalStrut(10));
-        col1.add(new JLabel("Mã SV: N22DCVT044"));
+        col1.add(new JLabel("Mã SV: "));
         col1.add(new JLabel("Tên: Trần Quang Khải"));
-        col1.add(new JLabel("Ngày sinh: 29/08/2004"));
+        col1.add(new JLabel("Ngày sinh: "));
         col1.add(new JLabel("Giới tính: Nam"));
 
         JPanel col2 = new JPanel();
         col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
 
-        col2.add(new JLabel("SĐT: 0823828171"));
-        col2.add(new JLabel("CMND: 045204006474"));
-        col2.add(new JLabel("Dân tộc: Kinh"));
-        col2.add(new JLabel("Nơi sinh: Quảng Trị"));
+        col2.add(new JLabel("SĐT: "));
+        col2.add(new JLabel("CMND: "));
+        col2.add(new JLabel("Dân tộc: "));
+        col2.add(new JLabel("Nơi sinh: "));
 
         JPanel col3 = new JPanel();
         col3.setLayout(new BoxLayout(col3, BoxLayout.Y_AXIS));
