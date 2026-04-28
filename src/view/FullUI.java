@@ -1,14 +1,18 @@
 package view;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class DashboardFullUI extends JFrame {
+import com.trungtam.dao.TaiKhoanDAO;
+import com.trungtam.model.TaiKhoan;
+
+public class FullUI extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel mainContent;
 
-    public DashboardFullUI() {
+    public FullUI() {
         setTitle("Giao diện Login");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,12 +42,6 @@ public class DashboardFullUI extends JFrame {
         JButton btnHome = new JButton("Trang chủ");
         btnHome.setMaximumSize(new Dimension(180, 35));
 
-//        JButton btnHocPhi = new JButton("Học phí");
-//        btnHocPhi.setMaximumSize(new Dimension(180, 35));
-
-//        JButton btnThongBao = new JButton("Thông báo");
-//        btnThongBao.setMaximumSize(new Dimension(180, 35));
-
         // ===== ADD COMPONENT =====
         leftPanel.add(lblUser);
         leftPanel.add(Box.createVerticalStrut(5));
@@ -62,18 +60,11 @@ public class DashboardFullUI extends JFrame {
 
         leftPanel.add(btnHome);
         leftPanel.add(Box.createVerticalStrut(10));
-//        leftPanel.add(btnHocPhi);
-//        leftPanel.add(Box.createVerticalStrut(10));
-//        leftPanel.add(btnThongBao);
 
-        // đẩy layout đẹp hơn
         leftPanel.add(Box.createVerticalGlue());
 
-        // ===== WRAPPER (FIX LỖI Ở ĐÂY) =====
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setPreferredSize(new Dimension(220, 0));
-
-        // QUAN TRỌNG: dùng CENTER (không dùng NORTH nữa)
         wrapper.add(leftPanel, BorderLayout.CENTER);
 
         add(wrapper, BorderLayout.WEST);
@@ -83,23 +74,44 @@ public class DashboardFullUI extends JFrame {
         mainContent = new JPanel(cardLayout);
 
         JPanel homePanel = createHomePanel();
-        JPanel hocPhiPanel = createSimplePage("TRANG HỌC PHÍ");
-        JPanel thongBaoPanel = createSimplePage("TRANG THÔNG BÁO");
-
         mainContent.add(homePanel, "HOME");
-        mainContent.add(hocPhiPanel, "HOCPHI");
-        mainContent.add(thongBaoPanel, "THONGBAO");
 
         add(mainContent, BorderLayout.CENTER);
 
-        // ===== EVENT =====
+        // ===== EVENT LOGIN =====
         btnLogin.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+            String username = txtUser.getText();
+            String password = new String(txtPass.getPassword());
+
+            TaiKhoanDAO dao = new TaiKhoanDAO();
+            TaiKhoan tk = dao.login(username, password);
+
+            if (tk != null) {
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+
+                switch (tk.getVaiTro()) {
+                    case "admin":
+                        new AdminUI().setVisible(true);
+                        break;
+                    case "giangvien":
+                        new GiangVienUI().setVisible(true);
+                        break;
+                    case "hocvien":
+                        new HocVienUI().setVisible(true);
+                        break;
+                }
+
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!");
+            }
         });
 
+        // ===== ENTER = LOGIN =====
+        txtPass.addActionListener(e -> btnLogin.doClick());
+
+        // ===== MENU =====
         btnHome.addActionListener(e -> cardLayout.show(mainContent, "HOME"));
-//        btnHocPhi.addActionListener(e -> cardLayout.show(mainContent, "HOCPHI"));
-//        btnThongBao.addActionListener(e -> cardLayout.show(mainContent, "THONGBAO"));
     }
 
     // ===== HOME =====
@@ -130,18 +142,6 @@ public class DashboardFullUI extends JFrame {
         return panel;
     }
 
-    // ===== PAGE =====
-    private JPanel createSimplePage(String title) {
-        JPanel panel = new JPanel(new BorderLayout());
-
-        JLabel label = new JLabel(title, JLabel.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-
-        panel.add(label, BorderLayout.CENTER);
-
-        return panel;
-    }
-
     // ===== CARD =====
     private JPanel createCard(String title, String content) {
         JPanel panel = new JPanel(new BorderLayout());
@@ -165,7 +165,7 @@ public class DashboardFullUI extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new DashboardFullUI().setVisible(true);
+            new FullUI().setVisible(true);
         });
     }
 }

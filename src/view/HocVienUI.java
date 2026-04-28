@@ -4,9 +4,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 
-public class LoginUI extends JFrame {
+public class HocVienUI extends JFrame {
 
-    public LoginUI() {
+    public HocVienUI() {
         setTitle("Sinh viên Dashboard");
         setSize(1200, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -130,7 +130,7 @@ public class LoginUI extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new LoginUI().setVisible(true);
+            new HocVienUI().setVisible(true);
         });
     }
 }

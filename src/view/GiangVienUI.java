@@ -4,9 +4,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 
-public class LecturerUI extends JFrame {
+public class GiangVienUI extends JFrame {
 
-    public LecturerUI() {
+    public GiangVienUI() {
         setTitle("Giảng viên Dashboard");
         setSize(1200, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -139,7 +139,7 @@ public class LecturerUI extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new LecturerUI().setVisible(true);
+            new GiangVienUI().setVisible(true);
         });
     }
 }

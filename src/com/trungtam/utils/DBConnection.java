@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class DBConnection {
     public static Connection getConnection() {
         try {
-            String url = "jdbc:mysql://localhost:3306/manager";
+            String url = "jdbc:mysql://localhost:3306/quanly";
             String user = "root";
             String password = "root"; // 
 
