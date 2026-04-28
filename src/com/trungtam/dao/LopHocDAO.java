@@ -1,5 +1,5 @@
 package com.trungtam.dao;
 
-public class HocVienDAO {
+public class LopHocDAO {
 
 }
