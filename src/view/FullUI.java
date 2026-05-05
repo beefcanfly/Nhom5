@@ -4,8 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-import com.trungtam.dao.TaiKhoanDAO;
 import com.trungtam.model.TaiKhoan;
+import com.trungtam.services.AuthService;
+import com.trungtam.utils.RoleRouter;
 
 public class FullUI extends JFrame {
 
@@ -57,7 +58,6 @@ public class FullUI extends JFrame {
         leftPanel.add(btnLogin);
 
         leftPanel.add(Box.createVerticalStrut(30));
-
         leftPanel.add(btnHome);
         leftPanel.add(Box.createVerticalStrut(10));
 
@@ -78,32 +78,25 @@ public class FullUI extends JFrame {
 
         add(mainContent, BorderLayout.CENTER);
 
-        // ===== EVENT LOGIN =====
+        // ===== LOGIN EVENT (CHUẨN) =====
         btnLogin.addActionListener(e -> {
-            String username = txtUser.getText();
+
+            String username = txtUser.getText().trim();
             String password = new String(txtPass.getPassword());
 
-            TaiKhoanDAO dao = new TaiKhoanDAO();
-            TaiKhoan tk = dao.login(username, password);
+            AuthService service = new AuthService();
+            TaiKhoan tk = service.login(username, password);
 
             if (tk != null) {
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+                this.dispose(); // đóng login
 
-                switch (tk.getVaiTro()) {
-                    case "admin":
-                        new AdminUI().setVisible(true);
-                        break;
-                    case "giangvien":
-                        new GiangVienUI().setVisible(true);
-                        break;
-                    case "hocvien":
-                        new HocVienUI().setVisible(true);
-                        break;
-                }
+                // 👉 phân quyền tại đây
+                RoleRouter.openUI(tk);
 
-                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!");
+                txtPass.setText("");
+                txtPass.requestFocus();
             }
         });
 
