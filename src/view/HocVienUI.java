@@ -91,7 +91,7 @@ public class HocVienUI extends JFrame {
         avatar.setBackground(Color.BLUE);
 
         col1.add(avatar);
-        col1.add(Box.createVerticalStrut(10));
+        col1.add(Box.createVerticalStrut(5));
         col1.add(new JLabel("Mã SV: "));
         col1.add(new JLabel("Tên: Trần Quang Khải"));
         col1.add(new JLabel("Ngày sinh: "));
