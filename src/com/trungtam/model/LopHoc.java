@@ -8,6 +8,8 @@ public class LopHoc {
     private String caHoc;
     private String lichHoc;
     private String trangThai;
+    private double hocPhi;
+    private int thoiLuong;
 
     public LopHoc() {}
 
@@ -42,4 +44,20 @@ public class LopHoc {
 
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+
+	public double getHocPhi() {
+		return hocPhi;
+	}
+
+	public void setHocPhi(double hocPhi) {
+		this.hocPhi = hocPhi;
+	}
+
+	public int getThoiLuong() {
+		return thoiLuong;
+	}
+
+	public void setThoiLuong(int thoiLuong) {
+		this.thoiLuong = thoiLuong;
+	}
 }
