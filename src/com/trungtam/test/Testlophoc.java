@@ -9,15 +9,13 @@ public class Testlophoc {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/quanly";
         String user = "root";
-        String password = "root"; // chỉnh lại nếu có mật khẩu
+        String password = ""; 
 
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
             Statement stmt = conn.createStatement();
 
-            String sql = "SELECT maLop, tenLop, caHoc, lichHoc " +
-                         "FROM lophoc " +
-                         "WHERE caHoc = 'sang' AND lichHoc = '2-4-6'";
+            String sql = "SELECT maLop, tenLop, caHoc, lichHoc FROM LopHoc WHERE lichHoc = '2-4-6'";
 
             ResultSet rs = stmt.executeQuery(sql);
 
