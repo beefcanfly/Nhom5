@@ -9,6 +9,34 @@ import java.util.List;
 
 public class NguoiDungDAO {
 
+	public NguoiDung findById(String maNguoiDung) {
+	    try (Connection conn = DBConnection.getConnection()) {
+
+	        String sql = "SELECT * FROM nguoidung WHERE maNguoiDung = ?";
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	        ps.setString(1, maNguoiDung);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            NguoiDung nd = new NguoiDung();
+	            nd.setMaNguoiDung(rs.getString("maNguoiDung"));
+	            nd.setHoTen(rs.getString("hoTen"));
+	            nd.setEmail(rs.getString("email"));
+	            nd.setNgaySinh(rs.getString("ngaySinh"));
+	            nd.setGioiTinh(rs.getString("gioiTinh"));
+	            nd.setSoDienThoai(rs.getString("soDienThoai"));
+	            nd.setQueQuan(rs.getString("queQuan"));
+
+	            return nd;
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+	
     // READ ALL
     public List<NguoiDung> getAll() {
         List<NguoiDung> list = new ArrayList<>();
@@ -25,6 +53,7 @@ public class NguoiDungDAO {
                 nd.setNgaySinh(rs.getString("ngaySinh")); // FIX
                 nd.setGioiTinh(rs.getString("gioiTinh"));
                 nd.setSoDienThoai(rs.getString("soDienThoai"));
+                nd.setQueQuan(rs.getString("queQuan"));
 
                 list.add(nd);
             }
@@ -45,6 +74,7 @@ public class NguoiDungDAO {
             ps.setString(3, nd.getNgaySinh()); // FIX
             ps.setString(4, nd.getGioiTinh());
             ps.setString(5, nd.getSoDienThoai());
+            ps.setString(6, nd.getQueQuan());
 
             return ps.executeUpdate() > 0;
 
@@ -66,6 +96,7 @@ public class NguoiDungDAO {
             ps.setString(4, nd.getGioiTinh());
             ps.setString(5, nd.getSoDienThoai());
             ps.setString(6, nd.getMaNguoiDung());
+            ps.setString(7, nd.getQueQuan());
 
             return ps.executeUpdate() > 0;
 
@@ -76,12 +107,12 @@ public class NguoiDungDAO {
     }
 
     // DELETE
-    public boolean delete(int maNguoiDung) {
+    public boolean delete(String maNguoiDung) {
         String sql = "DELETE FROM nguoidung WHERE maNguoiDung=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, maNguoiDung);
+            ps.setString(1, maNguoiDung);
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {

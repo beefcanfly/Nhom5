@@ -102,4 +102,24 @@ public class LopHocDAO {
         }
         return list;
     }
+    public List<Object[]> getLopHocFullInfo() {
+        List<Object[]> list = new ArrayList<>();
+        // SQL Join 3 bảng để lấy tên Khóa học và tên Giảng viên
+        String sql = "SELECT l.maLop, l.tenLop, k.tenKhoaHoc, n.hoTen, l.caHoc, l.lichHoc, l.trangThai " +
+                     "FROM lophoc l " +
+                     "JOIN khoahoc k ON l.maKhoaHoc = k.maKhoaHoc " +
+                     "JOIN giangvien g ON l.maGV = g.maGV " +
+                     "JOIN nguoidung n ON g.maNguoiDung = n.maNguoiDung";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Object[]{
+                    rs.getString(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)
+                });
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
 }

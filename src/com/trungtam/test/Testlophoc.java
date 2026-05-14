@@ -9,7 +9,7 @@ public class Testlophoc {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/quanly";
         String user = "root";
-        String password = ""; 
+        String password = "root"; 
 
         try {
             Connection conn = DriverManager.getConnection(url, user, password);

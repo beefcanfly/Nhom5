@@ -8,6 +8,7 @@ public class NguoiDung {
     private String ngaySinh;
     private String gioiTinh;
     private String soDienThoai;
+    private String queQuan;
 
     // Constructor rỗng
     public NguoiDung() {
@@ -15,13 +16,15 @@ public class NguoiDung {
 
     // Constructor đầy đủ
     public NguoiDung(String maNguoiDung, String hoTen, String email,
-                     String ngaySinh, String gioiTinh, String soDienThoai) {
+                     String ngaySinh, String gioiTinh, String soDienThoai,
+                     String queQuan ) {
         this.maNguoiDung = maNguoiDung;
         this.hoTen = hoTen;
         this.email = email;
         this.ngaySinh = ngaySinh;
         this.gioiTinh = gioiTinh;
         this.soDienThoai = soDienThoai;
+        this.queQuan = queQuan;
     }
 
     // Getter & Setter
@@ -71,8 +74,15 @@ public class NguoiDung {
 
     public void setSoDienThoai(String soDienThoai) {
         this.soDienThoai = soDienThoai;
+        
     }
-
+    public String getQueQuan() {
+        return queQuan;
+    }
+    
+    public void setQueQuan(String queQuan) {
+        this.queQuan = queQuan;
+    }
     // toString 
     @Override
     public String toString() {
@@ -83,6 +93,7 @@ public class NguoiDung {
                 ", ngaySinh=" + ngaySinh +
                 ", gioiTinh='" + gioiTinh + '\'' +
                 ", soDienThoai='" + soDienThoai + '\'' +
+                "queQuan=" + queQuan + '\''+
                 '}';
     }
 }

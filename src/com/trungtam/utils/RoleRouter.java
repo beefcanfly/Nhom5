@@ -1,15 +1,21 @@
 package com.trungtam.utils;
 
-import com.trungtam.model.TaiKhoan;
+import javax.swing.JOptionPane;
+
+import com.trungtam.model.SessionUser;
+
 import view.AdminUI;
 import view.GiangVienUI;
 import view.HocVienUI;
 
 public class RoleRouter {
 
-    public static void openUI(TaiKhoan tk) {
+    public static void openUI(SessionUser session) {
 
-        switch (tk.getVaiTro().toLowerCase()) {
+        String role = session.getTaiKhoan().getVaiTro().toLowerCase();
+
+        switch (role) {
+
             case "admin":
                 new AdminUI().setVisible(true);
                 break;
@@ -23,7 +29,8 @@ public class RoleRouter {
                 break;
 
             default:
-                System.out.println("Vai trò không hợp lệ!");
+                JOptionPane.showMessageDialog(null,
+                        "Vai trò không hợp lệ: " + role);
         }
     }
 }
