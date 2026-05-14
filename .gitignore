@@ -1,0 +1,21 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Compiled output
+bin/
+build/
+*.class
+
+# Dependency
+target/
+
+# OS
+.DS_Store
+Thumbs.db
