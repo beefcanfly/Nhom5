@@ -3,6 +3,8 @@ package view;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import com.trungtam.model.TaiKhoan;
 import com.trungtam.services.AuthService;
@@ -90,6 +92,13 @@ public class FullUI extends JFrame {
         lblForgot.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblForgot.setForeground(BLUE_PRIMARY);
         lblForgot.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        lblForgot.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(FullUI.this, "Vui lòng liên hệ Quản trị viên (Admin) để cấp lại mật khẩu!");
+            }
+        });
         forgotPanel.add(lblForgot);
 
         // NÚT ĐĂNG NHẬP
@@ -143,7 +152,7 @@ loginPanel.add(Box.createVerticalStrut(20));
         JPanel menuPanel = new JPanel(new BorderLayout());
         menuPanel.setBackground(Color.WHITE);
         
-        JButton btnHome = new JButton("Trang chủ"); // Bỏ icon bị lỗi
+        JButton btnHome = new JButton("Trang chủ");
         btnHome.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnHome.setForeground(BLUE_PRIMARY);
         btnHome.setBackground(BLUE_LIGHT); 

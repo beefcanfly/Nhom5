@@ -15,6 +15,7 @@ import com.trungtam.model.SessionUser;
 import com.trungtam.model.TaiKhoan;
 import com.trungtam.model.DangKy;
 import com.trungtam.dao.DangKyDAO;
+import com.trungtam.dao.HocVienDAO;
 import com.trungtam.dao.ThongBaoDAO;
 import com.trungtam.utils.SessionManager;
 
@@ -25,6 +26,7 @@ public class HocVienUI extends JFrame {
     private HocVien hocVien;
     private DangKyDAO dkDAO = new DangKyDAO();
     private ThongBaoDAO tbDAO = new ThongBaoDAO();
+    private HocVienDAO hocVienDAO = new HocVienDAO();
 
     private final Color BLUE_PRIMARY = new Color(33, 150, 243);
     private final Color TEXT_MAIN = new Color(51, 51, 51);
@@ -43,6 +45,11 @@ public class HocVienUI extends JFrame {
             this.taiKhoan = session.getTaiKhoan();
             this.nguoiDung = session.getNguoiDung();
             this.hocVien = session.getHocVien();
+            
+            // Fix lấy lại dữ liệu nếu thiếu
+            if (this.taiKhoan != null && this.taiKhoan.getUsername() != null && this.hocVien == null) {
+                this.hocVien = hocVienDAO.findById(this.taiKhoan.getUsername());
+            }
         }
 
         try {
@@ -712,7 +719,7 @@ public class HocVienUI extends JFrame {
         logo.setForeground(Color.WHITE);
         logo.setFont(new Font("Segoe UI", Font.BOLD, 20));
         header.add(logo, BorderLayout.WEST);
-        String hoTen = (nguoiDung != null) ? nguoiDung.getHoTen() : "Guest";
+        String hoTen = (nguoiDung != null && nguoiDung.getHoTen() != null) ? nguoiDung.getHoTen() : "Unknown";
         String maHV_Str = (taiKhoan != null) ? taiKhoan.getUsername() : "";
         JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 12));
         userPanel.setOpaque(false);
@@ -745,7 +752,7 @@ public class HocVienUI extends JFrame {
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBackground(Color.WHITE);
         mainContent.setBorder(new EmptyBorder(10, 15, 10, 15));
-        String hoTen = (nguoiDung != null) ? nguoiDung.getHoTen() : "Unknown";
+        String hoTen = (nguoiDung != null && nguoiDung.getHoTen() != null) ? nguoiDung.getHoTen() : "Unknown";
         JPanel titlePanel = new JPanel(new GridLayout(2, 1, 0, 4));
         titlePanel.setBackground(Color.WHITE);
         titlePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -797,12 +804,12 @@ public class HocVienUI extends JFrame {
 
         // Lấy thông tin cơ bản từ session
         String maHV = (taiKhoan != null) ? taiKhoan.getUsername() : "Unknown";
-        String hoTen = (nguoiDung != null) ? nguoiDung.getHoTen() : "";
-        String email = (nguoiDung != null) ? nguoiDung.getEmail() : "";
-        String ngaySinh = (nguoiDung != null) ? nguoiDung.getNgaySinh() : "";
-        String sdt = (nguoiDung != null) ? nguoiDung.getSoDienThoai() : "";
-        String gioiTinh = (nguoiDung != null) ? nguoiDung.getGioiTinh() : "";
-        String queQuan = (nguoiDung != null) ? nguoiDung.getQueQuan() : "";
+        String hoTen = (nguoiDung != null && nguoiDung.getHoTen() != null) ? nguoiDung.getHoTen() : "Unknown";
+        String email = (nguoiDung != null && nguoiDung.getEmail() != null) ? nguoiDung.getEmail() : "Chưa cập nhật";
+        String ngaySinh = (nguoiDung != null && nguoiDung.getNgaySinh() != null) ? nguoiDung.getNgaySinh() : "Chưa cập nhật";
+        String sdt = (nguoiDung != null && nguoiDung.getSoDienThoai() != null) ? nguoiDung.getSoDienThoai() : "Chưa cập nhật";
+        String gioiTinh = (nguoiDung != null && nguoiDung.getGioiTinh() != null) ? nguoiDung.getGioiTinh() : "Chưa cập nhật";
+        String queQuan = (nguoiDung != null && nguoiDung.getQueQuan() != null) ? nguoiDung.getQueQuan() : "Chưa cập nhật";
 
         // --- LOGIC: TRUY VẤN KHÓA HỌC VÀ LỚP HỌC ---
         String tenCacKhoaHoc = "Chưa đăng ký";

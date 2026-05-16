@@ -49,7 +49,7 @@ public class AuthService {
         String role = tk.getVaiTro().toLowerCase();
 
         if (role.equals("giangvien")) {
-
+            // Sửa logic lấy giảng viên: Dùng username (maGV) hoặc tìm qua maNguoiDung
             GiangVien gv = giangVienDAO.findById(tk.getUsername());
             session.setGiangVien(gv);
 

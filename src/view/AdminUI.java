@@ -85,10 +85,19 @@ public class AdminUI extends JFrame {
         // Nạp dữ liệu
         if (type.equals("GV")) {
             List<Object[]> ds = giangVienDAO.getGiangVienFullInfo(); 
-            for (Object[] data : ds) container.add(new ProfileCard(data, "GV"));
+            // Nếu ds trống (trả về size 0)
+            if (ds != null && !ds.isEmpty()) {
+                for (Object[] data : ds) container.add(new ProfileCard(data, "GV"));
+            } else {
+                 container.add(new JLabel("Chưa có dữ liệu Giảng Viên trong hệ thống."));
+            }
         } else {
             List<Object[]> ds = hocVienDAO.getHocVienFullInfo();
-            for (Object[] data : ds) container.add(new ProfileCard(data, "HV"));
+            if (ds != null && !ds.isEmpty()) {
+                for (Object[] data : ds) container.add(new ProfileCard(data, "HV"));
+            } else {
+                 container.add(new JLabel("Chưa có dữ liệu Học Viên trong hệ thống."));
+            }
         }
 
         // Đặt container vào một Panel bọc (Wrapper) để tránh việc các Card bị kéo dãn chiều cao
@@ -123,7 +132,7 @@ public class AdminUI extends JFrame {
             body.setBorder(new EmptyBorder(15, 15, 10, 15)); // Padding vừa phải
 
             // Tên đối tượng (In đậm, kích thước lớn)
-            JLabel name = new JLabel(data[1].toString());
+            JLabel name = new JLabel(data[1] != null ? data[1].toString() : "Unknown");
             name.setFont(new Font("Segoe UI", Font.BOLD, 16));
             name.setForeground(new Color(33, 33, 33));
             
@@ -133,17 +142,17 @@ public class AdminUI extends JFrame {
             // Các dòng thông tin nhỏ hơn
             Font infoFont = new Font("Segoe UI", Font.PLAIN, 13);
             
-            JLabel lblEmail = new JLabel("• Email: " + data[2]);
+            JLabel lblEmail = new JLabel("• Email: " + (data[2] != null ? data[2] : ""));
             lblEmail.setFont(infoFont);
             body.add(lblEmail);
             body.add(Box.createVerticalStrut(5));
 
-            JLabel lblSdt = new JLabel("• SĐT: " + data[3]);
+            JLabel lblSdt = new JLabel("• SĐT: " + (data[3] != null ? data[3] : ""));
             lblSdt.setFont(infoFont);
             body.add(lblSdt);
             body.add(Box.createVerticalStrut(5));
 
-            String extraInfo = type.equals("GV") ? "Chuyên môn: " + data[5] : "Trạng thái: " + data[4];
+            String extraInfo = type.equals("GV") ? "Chuyên môn: " + (data[5] != null ? data[5] : "") : "Trạng thái: " + (data[4] != null ? data[4] : "");
             JLabel lblExtra = new JLabel("• " + extraInfo);
             lblExtra.setFont(infoFont);
             body.add(lblExtra);
@@ -189,6 +198,11 @@ public class AdminUI extends JFrame {
         String maND = (type.equals("GV")) ? data[9].toString() : data[8].toString();
         NguoiDung nd = nguoiDungDAO.findById(maND);
 
+        if (nd == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin chi tiết (Lỗi đồng bộ dữ liệu)!");
+            return;
+        }
+
         // Các Field nhập liệu
         JTextField tTen = new JTextField(nd.getHoTen());
         JTextField tEmail = new JTextField(nd.getEmail());
@@ -210,12 +224,12 @@ public class AdminUI extends JFrame {
 
         if (type.equals("GV")) {
             GiangVien gv = giangVienDAO.findById(data[0].toString());
-            tExtra1.setText(gv.getHocVi()); tExtra2.setText(gv.getChuyenMon());
+            tExtra1.setText(gv != null ? gv.getHocVi() : ""); tExtra2.setText(gv != null ? gv.getChuyenMon() : "");
             p.add(new JLabel("Học vị:")); p.add(tExtra1);
             p.add(new JLabel("Chuyên môn:")); p.add(tExtra2);
         } else {
             HocVien hv = hocVienDAO.findById(data[0].toString());
-            tExtra1.setText(hv.getTrangThai());
+            tExtra1.setText(hv != null ? hv.getTrangThai() : "");
             p.add(new JLabel("Trạng thái:")); p.add(tExtra1);
         }
 
@@ -234,15 +248,20 @@ public class AdminUI extends JFrame {
             if (nguoiDungDAO.update(nd)) {
                 if (type.equals("GV")) {
                     GiangVien gv = giangVienDAO.findById(data[0].toString());
-                    gv.setHocVi(tExtra1.getText()); gv.setChuyenMon(tExtra2.getText());
-                    giangVienDAO.update(gv);
+                    if (gv != null) {
+                        gv.setHocVi(tExtra1.getText()); gv.setChuyenMon(tExtra2.getText());
+                        giangVienDAO.update(gv);
+                    }
                 } else {
                     HocVien hv = hocVienDAO.findById(data[0].toString());
-                    hv.setTrangThai(tExtra1.getText()); hocVienDAO.update(hv);
+                    if (hv != null) {
+                        hv.setTrangThai(tExtra1.getText()); hocVienDAO.update(hv);
+                    }
                 }
                 JOptionPane.showMessageDialog(dialog, "Đã cập nhật thông tin thành công!");
                 dialog.dispose();
-                // Refresh lại trang hiện tại
+                // Tải lại nội dung component để hiển thị dữ liệu mới
+                cardPanel.add(createEntityPage(type.equals("GV") ? "GIẢNG VIÊN" : "HỌC VIÊN", type), type.equals("GV") ? "GiangVien" : "HocVien");
                 cardLayout.show(cardPanel, type.equals("GV") ? "GiangVien" : "HocVien");
             }
         });
@@ -282,14 +301,47 @@ public class AdminUI extends JFrame {
         DefaultTableModel modelKH = new DefaultTableModel(cols, 0);
         JTable table = createAdminTable(modelKH);
 
-        // Load dữ liệu từ DAO (Giả định bạn có KhoaHocDAO)
+        // Load dữ liệu từ DAO
         loadDataToTableKH(modelKH);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // Sự kiện nút bấm (Ví dụ cho nút thêm)
+        // Sự kiện nút Thêm
         btnAdd.addActionListener(e -> showKhoaHocDialog(null, modelKH));
+
+        // Sự kiện nút Sửa
+        btnEdit.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khóa học cần sửa!");
+                return;
+            }
+            String maKH = table.getValueAt(row, 0).toString();
+            KhoaHoc kh = khoaHocDAO.getById(maKH);
+            // Sửa lỗi: Cập nhật lại UI sau khi nhấn Sửa Thông Tin
+            if (kh != null) {
+                showKhoaHocDialog(kh, modelKH);
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi: Không tìm thấy khóa học trong Database!");
+            }
+        });
+
+        // Sự kiện nút Xóa
+        btnDelete.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khóa học cần xóa!");
+                return;
+            }
+            String maKH = table.getValueAt(row, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa khóa học " + maKH + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                khoaHocDAO.delete(maKH);
+                JOptionPane.showMessageDialog(this, "Đã xóa khóa học thành công!");
+                loadDataToTableKH(modelKH);
+            }
+        });
 
         return mainPanel;
     }
@@ -332,10 +384,41 @@ public class AdminUI extends JFrame {
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
+        // Sự kiện nút Thêm
+        btnAdd.addActionListener(e -> showLopHocDialog(null, modelLH));
+
+        // Sự kiện nút Sửa
+        btnEdit.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn lớp học cần sửa!");
+                return;
+            }
+            String maLop = table.getValueAt(row, 0).toString();
+            // Khôi phục lại trạng thái thông báo đang hoàn thiện cho Sửa Lớp
+            JOptionPane.showMessageDialog(this, "Chức năng sửa lớp học đang hoàn thiện");
+        });
+
+        // Sự kiện nút Xóa
+        btnDelete.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn lớp học cần xóa!");
+                return;
+            }
+            String maLop = table.getValueAt(row, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa lớp " + maLop + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                lopHocDAO.delete(maLop);
+                JOptionPane.showMessageDialog(this, "Đã xóa lớp học thành công!");
+                loadDataToTableLH(modelLH);
+            }
+        });
+
         return mainPanel;
     } 
     
-    private void showLopHocDialog() {
+    private void showLopHocDialog(LopHoc existingLH, DefaultTableModel model) {
         JDialog dialog = new JDialog(this, "Thiết lập lớp học mới", true);
         dialog.setSize(450, 600);
         dialog.setLayout(new BorderLayout());
@@ -360,6 +443,13 @@ public class AdminUI extends JFrame {
         p.add(new JLabel("Lịch học (VD: 2-4-6):")); p.add(tLich);
 
         JButton btnSave = createStyledButton("LƯU THÔNG TIN", new Color(40, 167, 69));
+        
+        // Khôi phục hành vi cũ: Nút lưu chỉ ẩn dialog
+        btnSave.addActionListener(e -> {
+            JOptionPane.showMessageDialog(dialog, "Chức năng thêm lớp học đang hoàn thiện");
+            dialog.dispose();
+        });
+
         dialog.add(p, BorderLayout.CENTER);
         dialog.add(btnSave, BorderLayout.SOUTH);
         dialog.setVisible(true);
@@ -406,7 +496,7 @@ public class AdminUI extends JFrame {
                 // Mở lại giao diện tổng/Login (Giả định là FullUI như các phần trước)
                 SwingUtilities.invokeLater(() -> {
                     // Nếu bạn có class FullUI hoặc LoginUI, hãy gọi nó ở đây
-                    // new FullUI().setVisible(true); 
+                     new FullUI().setVisible(true); 
                 });
             }
         });
@@ -474,29 +564,71 @@ public class AdminUI extends JFrame {
         return btn;
     }
     
-    private void showKhoaHocDialog(Object[] data, DefaultTableModel model) {
-        JDialog dialog = new JDialog(this, "Thông tin khóa học", true);
-        dialog.setSize(400, 450);
+    private void showKhoaHocDialog(KhoaHoc existingKH, DefaultTableModel model) {
+        boolean isEdit = (existingKH != null);
+        String dialogTitle = isEdit ? "Sửa thông tin khóa học" : "Thêm khóa học mới";
+        JDialog dialog = new JDialog(this, dialogTitle, true);
+        dialog.setSize(400, 500);
         dialog.setLocationRelativeTo(this);
         
         JPanel p = new JPanel(new GridLayout(0, 1, 5, 10));
         p.setBorder(new EmptyBorder(20, 30, 20, 30));
 
+        JTextField tMa = new JTextField();
         JTextField tTen = new JTextField();
         JTextField tPhi = new JTextField();
         JTextField tTime = new JTextField();
         JComboBox<String> cbStatus = new JComboBox<>(new String[]{"Hoạt động", "Tạm dừng"});
 
+        p.add(new JLabel("Mã khóa học:")); p.add(tMa);
         p.add(new JLabel("Tên khóa học:")); p.add(tTen);
         p.add(new JLabel("Học phí (VNĐ):")); p.add(tPhi);
         p.add(new JLabel("Thời lượng (buổi):")); p.add(tTime);
         p.add(new JLabel("Trạng thái:")); p.add(cbStatus);
 
+        if (isEdit) {
+            tMa.setText(existingKH.getMaKhoaHoc());
+            tMa.setEditable(false); // Không cho sửa mã
+            tMa.setBackground(new Color(240, 240, 240));
+            tTen.setText(existingKH.getTenKhoaHoc());
+            // Format học phí để không hiện định dạng exponential, ví dụ: 5.0E7 -> 50000000
+            tPhi.setText(String.format("%.0f", existingKH.getHocPhi()));
+            tTime.setText(String.valueOf(existingKH.getThoiLuong()));
+            cbStatus.setSelectedItem(existingKH.getTrangThai());
+        }
+
         JButton btnSave = createStyledButton("XÁC NHẬN LƯU", new Color(40, 167, 69));
         btnSave.addActionListener(e -> {
-            // Logic gọi KhoaHocDAO.insert() hoặc update() ở đây
-            JOptionPane.showMessageDialog(dialog, "Đã lưu khóa học thành công!");
-            dialog.dispose();
+            try {
+                String ma = tMa.getText().trim();
+                String ten = tTen.getText().trim();
+                double phi = Double.parseDouble(tPhi.getText().trim());
+                int time = Integer.parseInt(tTime.getText().trim());
+                String status = cbStatus.getSelectedItem().toString();
+
+                if (ma.isEmpty() || ten.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "Vui lòng nhập đầy đủ thông tin!");
+                    return;
+                }
+
+                KhoaHoc kh = new KhoaHoc(ma, ten, phi, time, status);
+                if (isEdit) {
+                    khoaHocDAO.update(kh);
+                    JOptionPane.showMessageDialog(dialog, "Cập nhật khóa học thành công!");
+                } else {
+                    KhoaHoc checkExist = khoaHocDAO.getById(ma);
+                    if (checkExist != null) {
+                        JOptionPane.showMessageDialog(dialog, "Mã khóa học đã tồn tại!");
+                        return;
+                    }
+                    khoaHocDAO.create(kh);
+                    JOptionPane.showMessageDialog(dialog, "Thêm khóa học thành công!");
+                }
+                loadDataToTableKH(model);
+                dialog.dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Học phí và thời lượng phải là số hợp lệ!");
+            }
         });
 
         dialog.add(p, BorderLayout.CENTER);
@@ -509,7 +641,6 @@ public class AdminUI extends JFrame {
         model.setRowCount(0); 
 
         // Lấy danh sách khóa học từ DAO
-        // Lưu ý: Đảm bảo class KhoaHocDAO của bạn có phương thức getList() hoặc getAll()
         List<KhoaHoc> list = khoaHocDAO.getList(); 
 
         if (list != null) {
@@ -517,9 +648,8 @@ public class AdminUI extends JFrame {
                 model.addRow(new Object[]{
                     kh.getMaKhoaHoc(),
                     kh.getTenKhoaHoc(),
-                    // Định dạng tiền tệ cho học phí: ví dụ 5,000,000 VNĐ
-                    String.format("%,.0f VNĐ", (double) kh.getHocPhi()),
-                    kh.getThoiLuong() + " buổi",
+                    kh.getHocPhi(), // Giữ nguyên số để khi edit dễ parse
+                    kh.getThoiLuong(),
                     kh.getTrangThai()
                 });
             }
