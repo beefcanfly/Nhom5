@@ -1,102 +1,16 @@
 package com.trungtam.dao;
- 
+
 import com.trungtam.model.KhoaHoc;
 import com.trungtam.utils.DBConnection;
- 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
- 
-public class KhoaHocDAO {
- 
-    public void create(KhoaHoc khoaHoc) {
-        String sql = "INSERT INTO KHOAHOC (MAKH, TENKH, HOCPHI, THOILUONG, TRANGTHAI) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, khoaHoc.getMaKhoaHoc());
-            pstmt.setString(2, khoaHoc.getTenKhoaHoc());
-            pstmt.setDouble(3, khoaHoc.getHocPhi());
-            pstmt.setInt(4, khoaHoc.getThoiLuong());
-            pstmt.setString(5, khoaHoc.getTrangThai());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
- 
-    public List<KhoaHoc> getAll() {
-        List<KhoaHoc> khoaHocList = new ArrayList<>();
-        String sql = "SELECT * FROM KHOAHOC";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                KhoaHoc kh = new KhoaHoc(
-                        rs.getString("MAKH"),
-                        rs.getString("TENKH"),
-                        rs.getDouble("HOCPHI"),
-                        rs.getInt("THOILUONG"),
-                        rs.getString("TRANGTHAI")
-                );
-                khoaHocList.add(kh);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return khoaHocList;
-    }
- 
-    public KhoaHoc getById(String maKhoaHoc) {
-        String sql = "SELECT * FROM KHOAHOC WHERE MAKH = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, maKhoaHoc);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return new KhoaHoc(
-                            rs.getString("MAKH"),
-                            rs.getString("TENKH"),
-                            rs.getDouble("HOCPHI"),
-                            rs.getInt("THOILUONG"),
-                            rs.getString("TRANGTHAI")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
- 
-    public void update(KhoaHoc khoaHoc) {
-        String sql = "UPDATE KHOAHOC SET TENKH = ?, HOCPHI = ?, THOILUONG = ?, TRANGTHAI = ? WHERE MAKH = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, khoaHoc.getTenKhoaHoc());
-            pstmt.setDouble(2, khoaHoc.getHocPhi());
-            pstmt.setInt(3, khoaHoc.getThoiLuong());
-            pstmt.setString(4, khoaHoc.getTrangThai());
-            pstmt.setString(5, khoaHoc.getMaKhoaHoc());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
- 
-    public void delete(String maKhoaHoc) {
-        String sql = "DELETE FROM KHOAHOC WHERE MAKH = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, maKhoaHoc);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
+public class KhoaHocDAO {
+
+    // Hàm lấy danh sách khóa học gốc (ĐÃ ĐỒNG BỘ TÊN CỘT TRÁNH LỖI NOT FOUND)
     public List<KhoaHoc> getList() {
         List<KhoaHoc> list = new ArrayList<>();
         String sql = "SELECT * FROM khoahoc";
@@ -106,7 +20,8 @@ public class KhoaHocDAO {
             
             while (rs.next()) {
                 KhoaHoc kh = new KhoaHoc();
-                kh.setMaKhoaHoc(rs.getString("maKhoaHoc"));
+                // 👉 LƯU Ý: Nếu DB của bạn đặt là maKH thì sửa chữ trong ngoặc thành "maKH" nhé!
+                kh.setMaKhoaHoc(rs.getString("maKhoaHoc")); 
                 kh.setTenKhoaHoc(rs.getString("tenKhoaHoc"));
                 kh.setHocPhi(rs.getDouble("hocPhi"));
                 kh.setThoiLuong(rs.getInt("thoiLuong"));
@@ -118,5 +33,83 @@ public class KhoaHocDAO {
         }
         return list;
     }
-}
 
+    // Hàm alias dự phòng cho AdminUI gọi không bị đỏ code
+    public List<KhoaHoc> getAll() {
+        return this.getList();
+    }
+
+    // Hàm tìm kiếm khóa học theo mã để phục vụ liên kết lớp học
+    public KhoaHoc getById(String maKH) {
+        String sql = "SELECT * FROM khoahoc WHERE maKhoaHoc = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maKH);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    KhoaHoc kh = new KhoaHoc();
+                    kh.setMaKhoaHoc(rs.getString("maKhoaHoc"));
+                    kh.setTenKhoaHoc(rs.getString("tenKhoaHoc"));
+                    kh.setHocPhi(rs.getDouble("hocPhi"));
+                    kh.setThoiLuong(rs.getInt("thoiLuong"));
+                    kh.setTrangThai(rs.getString("trangThai"));
+                    return kh;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Hàm thêm khóa học mới
+    public boolean create(KhoaHoc kh) {
+        String sql = "INSERT INTO khoahoc (maKhoaHoc, tenKhoaHoc, hocPhi, thoiLuong, trangThai) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, kh.getMaKhoaHoc());
+            ps.setString(2, kh.getTenKhoaHoc());
+            ps.setDouble(3, kh.getHocPhi());
+            ps.setInt(4, kh.getThoiLuong());
+            ps.setString(5, kh.getTrangThai());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Hàm cập nhật khóa học
+    public boolean update(KhoaHoc kh) {
+        String sql = "UPDATE khoahoc SET tenKhoaHoc = ?, hocPhi = ?, thoiLuong = ?, trangThai = ? WHERE maKhoaHoc = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, kh.getTenKhoaHoc());
+            ps.setDouble(2, kh.getHocPhi());
+            ps.setInt(3, kh.getThoiLuong());
+            ps.setString(4, kh.getTrangThai());
+            ps.setString(5, kh.getMaKhoaHoc());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Hàm xóa khóa học
+    public boolean delete(String maKH) {
+        String sql = "DELETE FROM khoahoc WHERE maKhoaHoc = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maKH);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}

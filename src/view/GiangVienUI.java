@@ -81,7 +81,7 @@ public class GiangVienUI extends JFrame {
         titlePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
-        JLabel lblWelcome = new JLabel("👋 Chào mừng giảng viên, " + hoTen);
+        JLabel lblWelcome = new JLabel(" Chào mừng giảng viên, " + hoTen);
         lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblWelcome.setForeground(BLUE_PRIMARY);
 
@@ -119,7 +119,7 @@ public class GiangVienUI extends JFrame {
         header.setBorder(BorderFactory.createCompoundBorder(
                 new MatteBorder(0, 0, 1, 0, BORDER_COLOR),
                 new EmptyBorder(8, 12, 8, 12)));
-        JLabel lblTitle = new JLabel("👤 Thông tin giảng viên");
+        JLabel lblTitle = new JLabel(" Thông tin giảng viên");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
         header.add(lblTitle, BorderLayout.WEST);
         card.add(header, BorderLayout.NORTH);
@@ -225,7 +225,7 @@ public class GiangVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // 1. Tiêu đề
-        JLabel lblTitle = new JLabel("📚 CHƯƠNG TRÌNH GIẢNG DẠY");
+        JLabel lblTitle = new JLabel(" CHƯƠNG TRÌNH GIẢNG DẠY");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(BLUE_PRIMARY);
         lblTitle.setBorder(new MatteBorder(0, 0, 3, 0, BLUE_PRIMARY));
@@ -298,7 +298,7 @@ public class GiangVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // --- TIÊU ĐỀ ---
-        JLabel lblTitle = new JLabel("📂 KHO TÀI LIỆU TỔNG HỢP");
+        JLabel lblTitle = new JLabel(" KHO TÀI LIỆU TỔNG HỢP");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(BLUE_PRIMARY);
         lblTitle.setBorder(new MatteBorder(0, 0, 3, 0, BLUE_PRIMARY));
@@ -372,7 +372,7 @@ public class GiangVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // --- TIÊU ĐỀ ---
-        JLabel lblTitle = new JLabel("📅 LỊCH GIẢNG DẠY TỔNG QUAN");
+        JLabel lblTitle = new JLabel(" LỊCH GIẢNG DẠY TỔNG QUAN");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(BLUE_PRIMARY);
         lblTitle.setBorder(new MatteBorder(0, 0, 3, 0, BLUE_PRIMARY));
@@ -529,7 +529,7 @@ public class GiangVienUI extends JFrame {
          header.setBackground(BLUE_PRIMARY);
          header.setPreferredSize(new Dimension(0, 60));
          header.setBorder(new EmptyBorder(0, 20, 0, 20));
-         JLabel logo = new JLabel("🌐 Cổng thông tin đào tạo");
+         JLabel logo = new JLabel(" Cổng thông tin đào tạo");
          logo.setForeground(Color.WHITE);
          logo.setFont(new Font("Segoe UI", Font.BOLD, 20));
          header.add(logo, BorderLayout.WEST);
