@@ -89,7 +89,7 @@ public class HocVienUI extends JFrame {
         panel.setBackground(Color.WHITE);
         panel.setBorder(new EmptyBorder(25, 25, 25, 25));
 
-        JLabel lblTitle = new JLabel("📝 Đăng ký Khóa học & Chọn lớp");
+        JLabel lblTitle = new JLabel(" Đăng ký Khóa học & Chọn lớp");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(BLUE_PRIMARY);
         panel.add(lblTitle, BorderLayout.NORTH);
@@ -195,7 +195,7 @@ public class HocVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30)); // Tăng lề cho thoáng
 
         // --- TIÊU ĐỀ NỔI BẬT ---
-        JLabel lbl = new JLabel("🔔 THÔNG BÁO HỆ THỐNG");
+        JLabel lbl = new JLabel(" THÔNG BÁO HỆ THỐNG");
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 28)); // Chữ tiêu đề rất to
         lbl.setForeground(BLUE_PRIMARY);
         lbl.setBorder(new MatteBorder(0, 0, 2, 0, BLUE_PRIMARY)); // Thêm đường gạch chân tiêu đề
@@ -239,7 +239,7 @@ public class HocVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // --- TIÊU ĐỀ ---
-        JLabel lblTitle = new JLabel("📅 THỜI KHÓA BIỂU TỔNG QUAN");
+        JLabel lblTitle = new JLabel(" THỜI KHÓA BIỂU TỔNG QUAN");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(BLUE_PRIMARY);
         lblTitle.setBorder(new MatteBorder(0, 0, 3, 0, BLUE_PRIMARY));
@@ -364,14 +364,14 @@ public class HocVienUI extends JFrame {
                 "Bạn có chắc chắn muốn hủy đăng ký môn: " + tenMon + "?", 
                 "Xác nhận hủy", JOptionPane.YES_NO_OPTION);
 
+         // Bên trong btnDelete.addActionListener ở hàm createHocPhiPage():
             if (confirm == JOptionPane.YES_OPTION) {
                 if (dkDAO.delete(hocVien.getMaHV(), maLop)) {
-                    JOptionPane.showMessageDialog(this, "Đã hủy đăng ký thành công!");
-                    // Refresh lại giao diện
-                    cardPanel.add(createHocPhiPage(), "Học phí");
-                    cardPanel.add(createThoiKhoaBieuPage(), "Thời khóa biểu");
-                    cardLayout.show(cardPanel, "Học phí");
-                }
+                    JOptionPane.showMessageDialog(this, "Đã hủy đăng ký môn học thành công!");
+                    
+                    // 👉 ĐÃ SỬA: Thay vì chỉ add tay 2 trang cũ, gọi hàm tổng thể để đồng bộ dọn dẹp sạch sẽ tài liệu/lộ trình
+                    refreshPagesAfterReg(); 
+                }            
             }
         });
 
@@ -448,10 +448,30 @@ public class HocVienUI extends JFrame {
         }
     }
     // Hàm hỗ trợ làm mới các tab dữ liệu
+ // =========================================================================
+    // ĐÃ SỬA: LÀM MỚI TẤT CẢ CÁC TRANG SAU KHI ĐĂNG KÝ MÔN THÀNH CÔNG
+    // =========================================================================
     private void refreshPagesAfterReg() {
+        if (cardPanel == null || cardLayout == null) return;
+
+        // 1. Ép nạp lại dữ liệu động cho Trang chủ (Thông tin học viên)
+        cardPanel.add(createHomePanel(), "Trang chủ");
+
+        // 2. Ép nạp lại lộ trình học động dựa trên môn học mới
+        cardPanel.add(createChuongTrinhDaoTaoPage(), "Xem chương trình đào tạo");
+
+        // 3. Ép nạp lại kho tài liệu tham khảo theo môn học mới
+        cardPanel.add(createTaiLieuHocTapPage(), "Tài liệu học");
+
+        // 4. Khởi tạo lại Thời khóa biểu và Học phí 
         cardPanel.add(createThoiKhoaBieuPage(), "Thời khóa biểu");
         cardPanel.add(createHocPhiPage(), "Học phí");
-        // Có thể chuyển về trang học phí để học viên kiểm tra luôn
+
+        // Thông báo cho hệ thống vẽ lại đồ họa render
+        cardPanel.revalidate();
+        cardPanel.repaint();
+
+        // Chuyển màn hình về trang Học phí để học viên kiểm tra hóa đơn trực quan
         cardLayout.show(cardPanel, "Học phí");
     }
 //=== TẠO TRANG CHƯƠNG TRÌNH ĐÀO TẠO ===//
@@ -461,7 +481,7 @@ public class HocVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // --- TIÊU ĐỀ TRANG ---
-        JLabel lblTitle = new JLabel("📚 LỘ TRÌNH ĐÀO TẠO CỦA TÔI");
+        JLabel lblTitle = new JLabel(" LỘ TRÌNH ĐÀO TẠO CỦA TÔI");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(BLUE_PRIMARY);
         lblTitle.setBorder(new MatteBorder(0, 0, 3, 0, BLUE_PRIMARY));
@@ -569,7 +589,7 @@ public class HocVienUI extends JFrame {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // --- TIÊU ĐỀ ---
-        JLabel lblTitle = new JLabel("📂 KHO TÀI LIỆU HỌC TẬP");
+        JLabel lblTitle = new JLabel(" KHO TÀI LIỆU HỌC TẬP");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTitle.setForeground(BLUE_PRIMARY);
         lblTitle.setBorder(new MatteBorder(0, 0, 3, 0, BLUE_PRIMARY));
@@ -715,7 +735,7 @@ public class HocVienUI extends JFrame {
         header.setBackground(BLUE_PRIMARY);
         header.setPreferredSize(new Dimension(0, 60));
         header.setBorder(new EmptyBorder(0, 20, 0, 20));
-        JLabel logo = new JLabel("🌐 Cổng thông tin đào tạo");
+        JLabel logo = new JLabel(" Cổng thông tin đào tạo");
         logo.setForeground(Color.WHITE);
         logo.setFont(new Font("Segoe UI", Font.BOLD, 20));
         header.add(logo, BorderLayout.WEST);
@@ -792,7 +812,7 @@ public class HocVienUI extends JFrame {
                 new MatteBorder(0, 0, 1, 0, BORDER_COLOR), 
                 new EmptyBorder(8, 12, 8, 12)));
 
-        JLabel lblTitle = new JLabel("👤 Thông tin học viên");
+        JLabel lblTitle = new JLabel(" Thông tin học viên");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblTitle.setForeground(TEXT_MAIN);
         header.add(lblTitle, BorderLayout.WEST);
