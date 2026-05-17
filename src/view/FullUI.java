@@ -15,8 +15,9 @@ public class FullUI extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel mainContent;
+    private com.trungtam.dao.ThongBaoDAO thongBaoDAO = new com.trungtam.dao.ThongBaoDAO();
 
-    // === BẢNG MÀU CHUẨN PTIT ===
+    
     private final Color BLUE_PRIMARY = new Color(52, 152, 219); 
     private final Color BLUE_LIGHT = new Color(233, 246, 255); 
     private final Color BORDER_COLOR = new Color(180, 215, 240); 
@@ -168,11 +169,14 @@ loginPanel.add(Box.createVerticalStrut(20));
         menuPanel.add(menuWrapper, BorderLayout.NORTH);
 
         // --- Footer Logo ---
-        JPanel footerPanel = new JPanel();
+        JPanel footerPanel = new JPanel(new BorderLayout()); 
         footerPanel.setBackground(Color.WHITE);
-        footerPanel.setBorder(new EmptyBorder(10, 10, 20, 10));
-        JLabel lblLogo = new JLabel("<html><center><b style='color:red;'>TRUNG TÂM ĐÀO TẠO NGHỀ MIỀN NAM</b><br><span style='font-size:9px; color:gray;'>");
-        footerPanel.add(lblLogo);
+        footerPanel.setBorder(new EmptyBorder(15, 10, 25, 10));
+        String htmlText = "<html><center>"
+                + "<b style='font-size:15px; color:red; font-family:Segoe UI;'>TRUNG TÂM ĐÀO TẠO NGHỀ</b><br>"
+                + "<b style='font-size:15px; color:red; font-family:Segoe UI;'>MIỀN NAM</b>"
+                + "</center></html>";
+
 
         JPanel sidebarTop = new JPanel(new BorderLayout());
         sidebarTop.add(loginPanel, BorderLayout.NORTH);
@@ -190,33 +194,63 @@ loginPanel.add(Box.createVerticalStrut(20));
     }
 
     // ===== GIAO DIỆN TRANG CHỦ =====
+ // ===== GIAO DIỆN TRANG CHỦ DỮ LIỆU ĐỘNG (BỎ HOÀN TOÀN NGÀY THÁNG) =====
     private JPanel createHomePanel() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(Color.WHITE);
 
         JPanel panel = new JPanel();
-panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // 1. SECTION THÔNG BÁO 
-        String[][] badges1 = {
-            {"THÔNG BÁO", "14/04/2026", "V/v: Nghỉ lễ và điều chỉnh lịch giảng dạy - học tập dịp Giỗ tổ Hùng Vương, ngày Chiến thắ..."},
-            {"THÔNG BÁO", "08/04/2026", "V/v đóng tiền thi lại hết môn học kỳ 1 năm học (2025-2026),..."}
-        };
-        String[][] links1 = {
-            {"V/v đóng tiền mua tài khoản ED cho học kỳ II năm học 2025-2026 (đợt 2)", "11/03/2026"},
-            {"THÔNG BÁO V/v thi kiểm tra Tiếng Anh chuẩn đầu ra cho sinh viên khóa 2022 và các khóa cũ...", "03/03/2026"},
-            {"V/v: Thu học phí Học kỳ 2 năm học 2025-2026 tại Học viện cơ sở Tp.HCM đối với sinh viên Khóa 2024 trở về trước", "27/01/2026"}
-        };
-        panel.add(createNewsSection("Thông báo", badges1, links1)); // Bỏ icon
+        // Đọc dữ liệu từ DAO của bạn (truyền 0 để bốc thông báo cho Tất cả)
+        java.util.List<com.trungtam.model.ThongBao> allNotices = thongBaoDAO.getThongBaoByRole(0);
+
+        java.util.List<String[]> thongBaoBadges = new java.util.ArrayList<>();
+        java.util.List<String> thongBaoLinks = new java.util.ArrayList<>(); // Đổi thành danh sách chuỗi đơn
+        java.util.List<String[]> hocPhiBadges = new java.util.ArrayList<>();
+
+        if (allNotices != null) {
+            for (com.trungtam.model.ThongBao tb : allNotices) {
+                String titleUpper = tb.getTieuDe().toUpperCase();
+                String summary = tb.getNoiDung();
+                
+                // Phân loại nhóm Học phí
+                if (titleUpper.contains("HỌC PHÍ") || titleUpper.contains("NỘP TIỀN")) {
+                    if (hocPhiBadges.size() < 1) {
+                        // Mảng gồm 2 phần tử: [0]=Nhãn hộp, [1]=Nội dung gộp tiêu đề + nội dung
+                        hocPhiBadges.add(new String[]{"HƯỚNG DẪN", "<b>" + tb.getTieuDe() + "</b><br>" + summary});
+                    }
+                } else {
+                    // Phân loại nhóm Thông báo chung
+                    if (thongBaoBadges.size() < 2) {
+                        thongBaoBadges.add(new String[]{"THÔNG BÁO", "<b>" + tb.getTieuDe() + "</b><br>" + summary});
+                    } else if (thongBaoLinks.size() < 3) {
+                        // Dòng chữ nhỏ bên phải
+                        thongBaoLinks.add(tb.getTieuDe() + " - " + summary);
+                    }
+                }
+            }
+        }
+
+        // Bẫy dữ liệu dự phòng nếu DB trống chưa có bài nào
+        if (thongBaoBadges.isEmpty()) {
+            thongBaoBadges.add(new String[]{"THÔNG BÁO", "Hiện tại chưa có thông báo mới nào từ ban quản trị."});
+        }
+        if (hocPhiBadges.isEmpty()) {
+            hocPhiBadges.add(new String[]{"HƯỚNG DẪN", "Chưa có hướng dẫn nộp học phí mới."});
+        }
+
+        String[][] badges1 = thongBaoBadges.toArray(new String[0][0]);
+        String[] links1 = thongBaoLinks.toArray(new String[0]); // Mảng 1 chiều chứa text link
+        String[][] badges2 = hocPhiBadges.toArray(new String[0][0]);
+
+        // Đổ dữ liệu lên UI
+        panel.add(createNewsSection("Thông báo", badges1, links1)); 
         panel.add(Box.createVerticalStrut(25)); 
 
-        // 2. SECTION HỌC PHÍ 
-        String[][] badges2 = {
-            {"HƯỚNG DẪN", "12/01/2024", "[Mới] Thông báo V/v: Hướng dẫn nộp tiền học phí và các khoản thu khác của sinh viên q..."}
-        };
-        panel.add(createNewsSection("Học phí", badges2, new String[0][0])); // Bỏ icon
+        panel.add(createNewsSection("Học phí", badges2, new String[0])); 
 
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setBorder(null);
@@ -225,14 +259,14 @@ panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         return wrapper;
     }
-
     // ===== HÀM TIỆN ÍCH: TẠO KHUNG BẢN TIN LỚN =====
-    private JPanel createNewsSection(String headerTitle, String[][] badges, String[][] links) {
+ // ===== HÀM TIỆN ÍCH: TẠO KHUNG BẢN TIN (ĐÃ XÓA NGÀY) =====
+    private JPanel createNewsSection(String headerTitle, String[][] badges, String[] links) {
         JPanel section = new JPanel(new BorderLayout());
         section.setBackground(Color.WHITE);
         section.setBorder(new LineBorder(BORDER_COLOR, 1, true)); 
 
-        // Header
+        // Header Section
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.WHITE);
         header.setBorder(BorderFactory.createCompoundBorder(
@@ -256,39 +290,34 @@ panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JPanel body = new JPanel(new BorderLayout(25, 0));
         body.setBackground(Color.WHITE);
         body.setBorder(new EmptyBorder(20, 20, 20, 20));
-// --- Cụm Badge Đỏ ---
+
+        // --- Cụm Badge Đỏ bên trái ---
         JPanel badgeContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         badgeContainer.setBackground(Color.WHITE);
         for(String[] b : badges) {
-            badgeContainer.add(createBadgeItem(b[0], b[1], b[2]));
+            badgeContainer.add(createBadgeItem(b[0], b[1])); // Chỉ truyền 2 tham số: Nhãn và Nội dung gộp
         }
         body.add(badgeContainer, BorderLayout.WEST);
 
-        // --- Danh sách tin tức ---
+        // --- Danh sách tin tức dòng nhỏ bên phải (Xóa hẳn cột ngày) ---
         if (links.length > 0) {
             JPanel newsListPanel = new JPanel();
             newsListPanel.setLayout(new BoxLayout(newsListPanel, BoxLayout.Y_AXIS));
             newsListPanel.setBackground(Color.WHITE);
             newsListPanel.setBorder(new MatteBorder(0, 1, 0, 0, new Color(240, 240, 240))); 
 
-            for (String[] item : links) {
-                JPanel row = new JPanel(new BorderLayout(10, 0));
+            for (String textItem : links) {
+                JPanel row = new JPanel(new BorderLayout());
                 row.setBackground(Color.WHITE);
                 row.setBorder(BorderFactory.createCompoundBorder(
                     new MatteBorder(0, 0, 1, 0, new Color(240, 240, 240)),
-                    new EmptyBorder(10, 15, 10, 0)
+                    new EmptyBorder(10, 15, 10, 15)
                 ));
 
-                JLabel lblNewsTitle = new JLabel("<html><p style='width:350px;'>» <span style='color:#3498db'>" + item[0] + "</span></p></html>");
+                JLabel lblNewsTitle = new JLabel("<html><p style='width:380px;'>» <span style='color:#3498db'>" + textItem + "</span></p></html>");
                 lblNewsTitle.setFont(new Font("Segoe UI", Font.PLAIN, 13));
                 
-                JLabel lblNewsDate = new JLabel(item[1]);
-                lblNewsDate.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-                lblNewsDate.setForeground(TEXT_MUTED);
-
                 row.add(lblNewsTitle, BorderLayout.CENTER);
-                row.add(lblNewsDate, BorderLayout.EAST);
-                
                 newsListPanel.add(row);
             }
             body.add(newsListPanel, BorderLayout.CENTER);
@@ -298,20 +327,20 @@ panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         return section;
     }
 
-    // ===== HÀM TIỆN ÍCH: TẠO 1 KHỐI Ô ĐỎ + CHỮ TRÍCH DẪN =====
-    private JPanel createBadgeItem(String badgeText, String dateText, String summaryText) {
+    // ===== HÀM TIỆN ÍCH: TẠO 1 KHỐI Ô ĐỎ + CHỮ TRÍCH DẪN (ĐÃ XÓA NGÀY & FIX TRÀN CHỮ) =====
+    private JPanel createBadgeItem(String badgeText, String summaryText) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setPreferredSize(new Dimension(240, 160)); 
 
-        // Ô viền đỏ
+        // Ô viền đỏ trên cùng
         JPanel redBoxWrapper = new JPanel(new BorderLayout());
         redBoxWrapper.setBackground(Color.WHITE);
-        redBoxWrapper.setBorder(new EmptyBorder(0, 0, 5, 0));
+        redBoxWrapper.setBorder(new EmptyBorder(0, 0, 8, 0));
         
         JPanel redBox = new JPanel(new BorderLayout());
         redBox.setBackground(Color.WHITE);
-        redBox.setPreferredSize(new Dimension(240, 100));
+        redBox.setPreferredSize(new Dimension(240, 95));
         redBox.setBorder(new LineBorder(RED_BADGE, 3, true)); 
         
         JLabel lblBadge = new JLabel(badgeText, SwingConstants.CENTER);
@@ -322,22 +351,14 @@ panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         redBoxWrapper.add(redBox, BorderLayout.CENTER);
         panel.add(redBoxWrapper, BorderLayout.NORTH);
 
-        // Khối chữ bên dưới
-JPanel textPanel = new JPanel(new BorderLayout());
+        // Khối chữ nội dung bên dưới (Đã gỡ bỏ dải gạch phân cách ngày)
+        JPanel textPanel = new JPanel(new BorderLayout());
         textPanel.setBackground(Color.WHITE);
 
-        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 3));
-        datePanel.setBackground(Color.WHITE);
-        datePanel.setBorder(new MatteBorder(1, 0, 0, 0, new Color(240, 240, 240)));
-        JLabel lblDate = new JLabel(dateText);
-        lblDate.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblDate.setForeground(TEXT_MUTED);
-        datePanel.add(lblDate);
-        textPanel.add(datePanel, BorderLayout.NORTH);
-
-        JLabel lblSummary = new JLabel("<html><p style='width:230px; color:#555;'>" + summaryText + "</p></html>");
+        JLabel lblSummary = new JLabel("<html><div style='width:215px; text-align:left;'>" + summaryText + "</div></html>");
         lblSummary.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        textPanel.add(lblSummary, BorderLayout.CENTER);
+        lblSummary.setForeground(new Color(85, 85, 85));
+        textPanel.add(lblSummary, BorderLayout.NORTH); 
 
         panel.add(textPanel, BorderLayout.CENTER);
         return panel;
