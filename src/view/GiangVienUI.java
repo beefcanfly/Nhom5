@@ -177,13 +177,13 @@ public class GiangVienUI extends JFrame {
     private JPanel createThongBaoPage() {
     JPanel panel = new JPanel(new BorderLayout(20, 20));
     panel.setBackground(Color.WHITE);
-    panel.setBorder(new EmptyBorder(30, 30, 30, 30)); // Tăng lề cho thoáng
+    panel.setBorder(new EmptyBorder(30, 30, 30, 30)); 
 
     // --- TIÊU ĐỀ NỔI BẬT ---
     JLabel lbl = new JLabel("🔔 THÔNG BÁO HỆ THỐNG");
-    lbl.setFont(new Font("Segoe UI", Font.BOLD, 28)); // Chữ tiêu đề rất to
+    lbl.setFont(new Font("Segoe UI", Font.BOLD, 28)); 
     lbl.setForeground(BLUE_PRIMARY);
-    lbl.setBorder(new MatteBorder(0, 0, 2, 0, BLUE_PRIMARY)); // Thêm đường gạch chân tiêu đề
+    lbl.setBorder(new MatteBorder(0, 0, 2, 0, BLUE_PRIMARY)); 
     panel.add(lbl, BorderLayout.NORTH);
 
     // --- CẤU HÌNH BẢNG ---
@@ -194,9 +194,9 @@ public class GiangVienUI extends JFrame {
     JTable table = createStyledTable(model);
     
     // Tùy chỉnh riêng độ rộng cột cho trang thông báo
-    table.getColumnModel().getColumn(0).setPreferredWidth(100);  // Mã số nhỏ
-    table.getColumnModel().getColumn(1).setPreferredWidth(300);  // Tiêu đề vừa
-    table.getColumnModel().getColumn(2).setPreferredWidth(600);  // Nội dung rộng nhất
+    table.getColumnModel().getColumn(0).setPreferredWidth(100);  
+    table.getColumnModel().getColumn(1).setPreferredWidth(300);  
+    table.getColumnModel().getColumn(2).setPreferredWidth(600);  
 
     // --- NẠP DỮ LIỆU ---
     List<com.trungtam.model.ThongBao> list = tbDAO.getThongBaoByRole(2); 
@@ -365,7 +365,6 @@ public class GiangVienUI extends JFrame {
     }
     
 // TẠO TRANG THỜI KHÓA BIỂU //
-  //=== TẠO TRANG THỜI KHÓA BIỂU GIẢNG VIÊN ===
     private JPanel createThoiKhoaBieuPage() {
         JPanel panel = new JPanel(new BorderLayout(20, 20));
         panel.setBackground(Color.WHITE);
