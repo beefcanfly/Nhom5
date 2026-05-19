@@ -10,7 +10,7 @@ import java.util.List;
 
 public class KhoaHocDAO {
 
-    // Hàm lấy danh sách khóa học gốc (ĐÃ ĐỒNG BỘ TÊN CỘT TRÁNH LỖI NOT FOUND)
+    // Hàm lấy danh sách khóa học gốc 
     public List<KhoaHoc> getList() {
         List<KhoaHoc> list = new ArrayList<>();
         String sql = "SELECT * FROM khoahoc";
@@ -20,7 +20,6 @@ public class KhoaHocDAO {
             
             while (rs.next()) {
                 KhoaHoc kh = new KhoaHoc();
-                // 👉 LƯU Ý: Nếu DB của bạn đặt là maKH thì sửa chữ trong ngoặc thành "maKH" nhé!
                 kh.setMaKhoaHoc(rs.getString("maKhoaHoc")); 
                 kh.setTenKhoaHoc(rs.getString("tenKhoaHoc"));
                 kh.setHocPhi(rs.getDouble("hocPhi"));
