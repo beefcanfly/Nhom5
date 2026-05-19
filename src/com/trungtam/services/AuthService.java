@@ -11,9 +11,7 @@ public class AuthService {
     private GiangVienDAO giangVienDAO = new GiangVienDAO();
     private HocVienDAO hocVienDAO = new HocVienDAO();
 
-    // =========================
     // LOGIN FULL
-    // =========================
     public SessionUser login(String username, String password) {
 
         // 1. validate cơ bản
@@ -35,9 +33,8 @@ public class AuthService {
             return null;
         }
 
-        // =========================
+     
         // 4. TẠO SESSION
-        // =========================
         SessionUser session = new SessionUser();
         session.setTaiKhoan(tk);
 
@@ -60,9 +57,7 @@ public class AuthService {
 
         }
 
-        // =========================
         // 7. LƯU SESSION GLOBAL
-        // =========================
         SessionManager.setSession(session);
 
         return session;
