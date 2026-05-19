@@ -11,7 +11,6 @@ import java.util.List;
 public class GiangVienDAO {
 
     // Lấy toàn bộ thông tin Giảng viên gộp với bảng cha NguoiDung để đổ lên lưới ProfileCard
-    // ĐÃ SỬA LỖI: Cú pháp kết hợp bảng (JOIN) chuẩn xác để không mất dữ liệu
     public List<Object[]> getGiangVienFullInfo() {
         List<Object[]> list = new ArrayList<>();
         String sql = "SELECT gv.maGV, nd.hoTen, nd.email, nd.soDienThoai, nd.ngaySinh, gv.chuyenMon, gv.hocVi, nd.gioiTinh, nd.queQuan, gv.maNguoiDung " +
