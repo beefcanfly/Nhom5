@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ThongBaoDAO {
 
-    // Hàm lấy danh sách thông báo động rút gọn trường ngày tháng (Dùng cho cả AdminUI và FullUI)
+    // Hàm lấy danh sách thông báo động (Dùng cho cả AdminUI và FullUI)
     public List<ThongBao> getThongBaoByRole(int role) {
         List<ThongBao> ds = new ArrayList<>();
         // Lấy thông báo riêng cho vai trò đó HOẶC thông báo dùng chung cho tất cả (0)
