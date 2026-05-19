@@ -24,7 +24,6 @@ public class DangKy {
         this.trangThai = trangThai;
     }
 
-    // Getter và Setter cho maDangKy
     public int getMaDangKy() {
         return maDangKy;
     }
@@ -33,7 +32,6 @@ public class DangKy {
         this.maDangKy = maDangKy;
     }
 
-    // Getter và Setter cho maHV
     public String getMaHV() {
         return maHV;
     }
@@ -42,7 +40,6 @@ public class DangKy {
         this.maHV = maHV;
     }
 
-    // Getter và Setter cho maLop
     public String getMaLop() {
         return maLop;
     }
@@ -51,8 +48,6 @@ public class DangKy {
         this.maLop = maLop;
     }
 
-
-    // Getter và Setter cho trangThai
     public String getTrangThai() {
         return trangThai;
     }
@@ -60,8 +55,6 @@ public class DangKy {
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
     }
-
-    // --- Getter và Setter cho các thuộc tính hiển thị thêm ---
 
     public String getTenHocVien() {
         return tenHocVien;
