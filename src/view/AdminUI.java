@@ -64,9 +64,8 @@ public class AdminUI extends JFrame {
         add(cardPanel, BorderLayout.CENTER);
     }
 
-    // =========================================================================
-    // 1. PHƯƠNG THỨC: TẠO TRANG QUẢN LÝ THẺ PROFILE CARD
-    // =========================================================================
+ 
+    //  PHƯƠNG THỨC: TẠO TRANG QUẢN LÝ THẺ PROFILE CARD
     private JPanel createEntityPage(String title, String type) {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(COLOR_BG_LIGHT);
@@ -138,9 +137,8 @@ public class AdminUI extends JFrame {
         return mainPanel;
     }
 
-    // =========================================================================
-    // 2. PHƯƠNG THỨC: POPUP FORM THÊM MỚI ĐA NĂNG (BẪY FORMAT CHUẨN)
-    // =========================================================================
+
+    // PHƯƠNG THỨC: POPUP FORM THÊM MỚI ĐA NĂNG 
     private void showAddEntityDialog(String type) {
         boolean isGV = type.equals("GV");
         JDialog dialog = new JDialog(this, isGV ? "Đăng ký giảng viên mới" : "Đăng ký học viên mới", true);
@@ -255,12 +253,7 @@ public class AdminUI extends JFrame {
         dialog.setVisible(true);
     }
 
-    // =========================================================================
-    // 3. HÀM BỔ SUNG: CẬP NHẬT ĐỒ HỌA THỜI GIAN THỰC TỪ CƠ SỞ DỮ LIỆU
-    // =========================================================================
- // =========================================================================
-    // ĐÃ FIX LỖI: ĐỒNG BỘ XÓA THẺ CARD GIẢNG VIÊN / HỌC VIÊN THỜI GIAN THỰC
-    // =========================================================================
+    // HÀM BỔ SUNG: CẬP NHẬT ĐỒ HỌA THỜI GIAN THỰC TỪ CƠ SỞ DỮ LIỆU
     public void refreshEntityPage(String type) {
         // Đồng bộ chuẩn tên CardLayout giống với lúc bạn add vào ban đầu ở hàm khởi tạo
         String cardLayoutName = type.equals("GV") ? "GiangVien" : "HocVien";
@@ -287,7 +280,7 @@ public class AdminUI extends JFrame {
     }
 
     
-    // 4. LỚP Ô THÔNG TIN (PROFILE CARD ĐÃ ĐỒNG BỘ HIỂN THỊ MÃ HV / MÃ GV)
+    //  LỚP Ô THÔNG TIN (PROFILE CARD ĐÃ ĐỒNG BỘ HIỂN THỊ MÃ HV / MÃ GV)
 
     class ProfileCard extends JPanel {
         public ProfileCard(Object[] data, String type) {
@@ -404,9 +397,8 @@ public class AdminUI extends JFrame {
             add(actionPanel, BorderLayout.SOUTH);
         }
     }
-    // =========================================================================
-    // 5. POPUP HIỂN THỊ TOÀN BỘ THÔNG TIN & LƯU THAY ĐỔI ĐỒNG BỘ
-    // =========================================================================
+    
+    //  POPUP HIỂN THỊ TOÀN BỘ THÔNG TIN & LƯU THAY ĐỔI ĐỒNG BỘ
     private void showFullDetailPopup(Object[] data, String type) {
         JDialog dialog = new JDialog(this, "Thông tin chi tiết", true);
         dialog.setSize(500, 650);
@@ -516,9 +508,6 @@ public class AdminUI extends JFrame {
 
         // 2. Bảng dữ liệu
         String[] cols = {"Mã KH", "Tên Khóa Học", "Học Phí", "Thời Lượng", "Trạng Thái"};
-        
-        // ❌ KHÔNG VIẾT: DefaultTableModel modelKH = ...
-        // 👉 SỬA THÀNH: Gán trực tiếp vào biến toàn cục vừa tạo
         modelKH = new DefaultTableModel(cols, 0); 
         
         JTable table = createAdminTable(modelKH);
@@ -594,9 +583,8 @@ public class AdminUI extends JFrame {
 
         return mainPanel;
     }
- // =========================================================================
+
     // HÀM HIỂN THỊ DIALOG THÊM / SỬA KHÓA HỌC (ĐÃ FIX LỖI KHÔNG CẬP NHẬT BẢNG)
-    // =========================================================================
     private void showKhoaHocDialog(KhoaHoc existingKH, DefaultTableModel model) {
         boolean isEdit = (existingKH != null);
         String dialogTitle = isEdit ? "Sửa thông tin khóa học" : "Thêm khóa học mới";
@@ -1171,17 +1159,11 @@ public class AdminUI extends JFrame {
         return panel;
     }
 
- // =========================================================================
-    // ĐÃ SỬA LỖI: HIỂN THỊ CHUẨN XÁC TOÀN BỘ DANH SÁCH THÔNG BÁO CHO ADMIN
-    // =========================================================================
+    // HIỂN THỊ CHUẨN XÁC TOÀN BỘ DANH SÁCH THÔNG BÁO CHO ADMIN
     private void refreshThongBaoTable() {
         if (modelThongBao == null) return;
         
         modelThongBao.setRowCount(0); // Xóa sạch lưới cũ
-        
-        // 👉 ĐỔI TẠI ĐÂY: Thay vì lấy thông báo lọc riêng của Học viên, 
-        // gọi hàm lấy thông báo hệ thống tổng (truyền 0 để bốc các thông báo công khai)
-        // Hoặc nếu Service của bạn có hàm getAll() hoặc getThongBaoByRole(0) thì gọi trực tiếp
         java.util.List<com.trungtam.model.ThongBao> ds = thongBaoService.getThongBaoChoHocVien();
         
         if (ds != null) {
