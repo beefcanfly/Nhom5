@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TaiKhoanDAO {
 
-    // 🔹 READ ALL
+    // Hàm GET ALL
     public List<TaiKhoan> getAll() {
         List<TaiKhoan> list = new ArrayList<>();
         String sql = "SELECT * FROM taikhoan";
@@ -35,7 +35,7 @@ public class TaiKhoanDAO {
         return list;
     }
 
-    // 🔹 GET BY USERNAME (rất quan trọng cho login)
+    //Hàm GET BY USERNAME 
     public TaiKhoan getByUsername(String username) {
         String sql = "SELECT * FROM taikhoan WHERE username=?";
 
@@ -61,7 +61,7 @@ public class TaiKhoanDAO {
         return null;
     }
 
-    // 🔹 INSERT
+    // Hàm INSERT
     public boolean insert(TaiKhoan tk) {
         String sql = "INSERT INTO taikhoan(username, password, vaiTro, trangThai, maNguoiDung) VALUES (?, ?, ?, ?, ?)";
 
@@ -82,7 +82,7 @@ public class TaiKhoanDAO {
         return false;
     }
 
-    // 🔹 UPDATE
+    //Hàm UPDATE
     public boolean update(TaiKhoan tk) {
         String sql = "UPDATE taikhoan SET password=?, vaiTro=?, trangThai=?, maNguoiDung=? WHERE username=?";
 
@@ -103,7 +103,7 @@ public class TaiKhoanDAO {
         return false;
     }
 
-    // 🔹 DELETE
+    //Hàm DELETE
     public boolean delete(String username) {
         String sql = "DELETE FROM taikhoan WHERE username=?";
 
