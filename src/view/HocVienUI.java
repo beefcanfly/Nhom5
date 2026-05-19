@@ -192,13 +192,13 @@ public class HocVienUI extends JFrame {
     private JPanel createThongBaoPage() {
         JPanel panel = new JPanel(new BorderLayout(20, 20));
         panel.setBackground(Color.WHITE);
-        panel.setBorder(new EmptyBorder(30, 30, 30, 30)); // Tăng lề cho thoáng
+        panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // --- TIÊU ĐỀ NỔI BẬT ---
         JLabel lbl = new JLabel(" THÔNG BÁO HỆ THỐNG");
-        lbl.setFont(new Font("Segoe UI", Font.BOLD, 28)); // Chữ tiêu đề rất to
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 28)); 
         lbl.setForeground(BLUE_PRIMARY);
-        lbl.setBorder(new MatteBorder(0, 0, 2, 0, BLUE_PRIMARY)); // Thêm đường gạch chân tiêu đề
+        lbl.setBorder(new MatteBorder(0, 0, 2, 0, BLUE_PRIMARY)); 
         panel.add(lbl, BorderLayout.NORTH);
 
         // --- CẤU HÌNH BẢNG ---
@@ -209,9 +209,9 @@ public class HocVienUI extends JFrame {
         JTable table = createStyledTable(model);
         
         // Tùy chỉnh riêng độ rộng cột cho trang thông báo
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);  // Mã số nhỏ
-        table.getColumnModel().getColumn(1).setPreferredWidth(300);  // Tiêu đề vừa
-        table.getColumnModel().getColumn(2).setPreferredWidth(600);  // Nội dung rộng nhất
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);  
+        table.getColumnModel().getColumn(1).setPreferredWidth(300);  
+        table.getColumnModel().getColumn(2).setPreferredWidth(600);  
 
         // --- NẠP DỮ LIỆU ---
         List<com.trungtam.model.ThongBao> list = tbDAO.getThongBaoByRole(1); 
@@ -368,8 +368,7 @@ public class HocVienUI extends JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 if (dkDAO.delete(hocVien.getMaHV(), maLop)) {
                     JOptionPane.showMessageDialog(this, "Đã hủy đăng ký môn học thành công!");
-                    
-                    // 👉 ĐÃ SỬA: Thay vì chỉ add tay 2 trang cũ, gọi hàm tổng thể để đồng bộ dọn dẹp sạch sẽ tài liệu/lộ trình
+                
                     refreshPagesAfterReg(); 
                 }            
             }
@@ -448,9 +447,6 @@ public class HocVienUI extends JFrame {
         }
     }
     // Hàm hỗ trợ làm mới các tab dữ liệu
- // =========================================================================
-    // ĐÃ SỬA: LÀM MỚI TẤT CẢ CÁC TRANG SAU KHI ĐĂNG KÝ MÔN THÀNH CÔNG
-    // =========================================================================
     private void refreshPagesAfterReg() {
         if (cardPanel == null || cardLayout == null) return;
 
