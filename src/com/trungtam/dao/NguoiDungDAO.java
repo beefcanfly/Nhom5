@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class NguoiDungDAO {
 
-    // Hàm chèn mới tài khoản gốc (Đầy đủ 7 tham số đầu vào)
+    // Hàm chèn mới tài khoản gốc 
     public boolean insert(NguoiDung nd) {
         String sql = "INSERT INTO nguoidung(maNguoiDung, hoTen, email, ngaySinh, gioiTinh, soDienThoai, queQuan) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -30,7 +30,7 @@ public class NguoiDungDAO {
         return false;
     }
 
-    // Hàm cập nhật thông tin chi tiết (Đã sửa vị trí maNguoiDung xuống cuối cùng của mệnh đề WHERE)
+    // Hàm cập nhật thông tin chi tiết 
     public boolean update(NguoiDung nd) {
         String sql = "UPDATE nguoidung SET hoTen=?, email=?, ngaySinh=?, gioiTinh=?, soDienThoai=?, queQuan=? WHERE maNguoiDung=?";
         
