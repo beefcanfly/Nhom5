@@ -194,7 +194,6 @@ loginPanel.add(Box.createVerticalStrut(20));
     }
 
     // ===== GIAO DIỆN TRANG CHỦ =====
- // ===== GIAO DIỆN TRANG CHỦ DỮ LIỆU ĐỘNG (BỎ HOÀN TOÀN NGÀY THÁNG) =====
     private JPanel createHomePanel() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(Color.WHITE);
@@ -260,7 +259,6 @@ loginPanel.add(Box.createVerticalStrut(20));
         return wrapper;
     }
     // ===== HÀM TIỆN ÍCH: TẠO KHUNG BẢN TIN LỚN =====
- // ===== HÀM TIỆN ÍCH: TẠO KHUNG BẢN TIN (ĐÃ XÓA NGÀY) =====
     private JPanel createNewsSection(String headerTitle, String[][] badges, String[] links) {
         JPanel section = new JPanel(new BorderLayout());
         section.setBackground(Color.WHITE);
@@ -327,7 +325,7 @@ loginPanel.add(Box.createVerticalStrut(20));
         return section;
     }
 
-    // ===== HÀM TIỆN ÍCH: TẠO 1 KHỐI Ô ĐỎ + CHỮ TRÍCH DẪN (ĐÃ XÓA NGÀY & FIX TRÀN CHỮ) =====
+    // ===== HÀM TIỆN ÍCH: TẠO 1 KHỐI Ô ĐỎ + CHỮ TRÍCH DẪN  =====
     private JPanel createBadgeItem(String badgeText, String summaryText) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
